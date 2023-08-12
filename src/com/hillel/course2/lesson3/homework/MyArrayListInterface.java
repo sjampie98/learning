@@ -1,4 +1,4 @@
-package com.hillel.course2.lesson1.homework;
+package com.hillel.course2.lesson3.homework;
 
 public interface MyArrayListInterface {
     String get(int index);
