@@ -1,4 +1,4 @@
-package com.hillel.course2.lesson1;
+package com.hillel.course2.lesson3;
 
 import java.io.BufferedReader;
 import java.io.IOException;
