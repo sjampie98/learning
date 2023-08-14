@@ -1,6 +1,6 @@
 package com.hillel.course2.lesson5.homework;
 
-public class Employee implements Comparable<Employee> {
+public class Employee {
 
     private String name;
     private String surname;
@@ -26,10 +26,5 @@ public class Employee implements Comparable<Employee> {
 
     public int getSalary() {
         return salary;
-    }
-
-    @Override
-    public int compareTo(Employee o) {
-        return o.getSalary();
     }
 }
