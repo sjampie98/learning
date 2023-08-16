@@ -8,13 +8,22 @@ public class Order {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Order(OrderStatusEnum status, LocalDateTime createdAt) {
+    public Order(OrderStatusEnum status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.status = status;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public OrderStatusEnum getStatus() {
         return status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
     public void setStatus(OrderStatusEnum status) {

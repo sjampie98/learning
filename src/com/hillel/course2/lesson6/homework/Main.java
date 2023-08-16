@@ -1,28 +1,58 @@
 package com.hillel.course2.lesson6.homework;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
+
+    static final String FILE_PATH = "/home/amnesia/Documents/text.txt";
     static final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws IOException {
         Map<Integer, Order> map = new HashMap<>();
-        map.put(1, new Order(OrderStatusEnum.NEW, LocalDateTime.now().minusDays(5)));
-        map.put(2, new Order(OrderStatusEnum.IN_PROGRESS, LocalDateTime.now().minusDays(15)));
-        map.put(3, new Order(OrderStatusEnum.FINISHED, LocalDateTime.now().minusDays(15)));
+        FileOrder file = new FileOrder(FILE_PATH);
+        parseFileToCollection(map, file);
+        System.out.println(map);
         System.out.println("Hi. press enter to continue. if you want to stop write stop");
         while (!READER.readLine().equals("stop")) {
             int orderNumber = inputOrderNumber();
             createOrUpdateOrder(map, orderNumber);
             System.out.println("If you want to continue press enter. if you want to stop write stop");
         }
-        System.out.println(map);
+        parseCollectionToFile(map);
+    }
+
+    private static void parseCollectionToFile(Map<Integer, Order> map) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH));
+        for (Map.Entry<Integer, Order> entry: map.entrySet()) {
+            Order order = entry.getValue();
+            String text = entry.getKey() + ";"
+                    + order.getStatus() + ";"
+                    + order.getCreatedAt() + ";"
+                    + order.getUpdatedAt() +"\n";
+            System.out.println(text);
+            writer.write(text);
+        }
+        writer.close();
+    }
+
+    private static void parseFileToCollection(Map<Integer, Order> map, FileOrder file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH));
+        String[] string;
+        if (file.length() > 0) {
+            while (reader.ready()) {
+                try {
+                    string = reader.readLine().split(";");
+                    map.put(Integer.valueOf(string[0]), new Order(OrderStatusEnum.valueOf(string[1]), LocalDateTime.parse(string[2]), LocalDateTime.parse(string[3])));
+                } catch (ArrayIndexOutOfBoundsException|NumberFormatException e) {
+                    System.out.println("Error : " + e.getMessage());
+                }
+            }
+            reader.close();
+        }
     }
 
     private static int inputOrderNumber() {
@@ -77,7 +107,7 @@ public class Main {
     }
 
     private static void createNewOrder(Map<Integer, Order> map, int orderNumber) {
-        map.put(orderNumber, new Order(OrderStatusEnum.NEW, LocalDateTime.now()));
+        map.put(orderNumber, new Order(OrderStatusEnum.NEW, LocalDateTime.now(), LocalDateTime.now()));
     }
 
     private static boolean checkNewStatus(OrderStatusEnum newStatus, OrderStatusEnum oldStatus) {
