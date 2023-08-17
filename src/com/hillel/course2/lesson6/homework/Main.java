@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Map<Integer, Order> map = new HashMap<>();
         FileOrder file = new FileOrder(FILE_PATH);
-        parseFileToCollection(map, file);
+        readOrdersFromFile(map, file);
         System.out.println(map);
         System.out.println("Hi. press enter to continue. if you want to stop write stop");
         while (!READER.readLine().equals("stop")) {
@@ -22,36 +22,34 @@ public class Main {
             createOrUpdateOrder(map, orderNumber);
             System.out.println("If you want to continue press enter. if you want to stop write stop");
         }
-        parseCollectionToFile(map);
+        writeOrdersToFile(map);
     }
 
-    private static void parseCollectionToFile(Map<Integer, Order> map) throws IOException {
+    private static void writeOrdersToFile(Map<Integer, Order> map) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH));
-        for (Map.Entry<Integer, Order> entry: map.entrySet()) {
+        for (Map.Entry<Integer, Order> entry : map.entrySet()) {
             Order order = entry.getValue();
             String text = entry.getKey() + ";"
                     + order.getStatus() + ";"
                     + order.getCreatedAt() + ";"
-                    + order.getUpdatedAt() +"\n";
+                    + order.getUpdatedAt() + "\n";
             System.out.println(text);
             writer.write(text);
         }
         writer.close();
     }
 
-    private static void parseFileToCollection(Map<Integer, Order> map, FileOrder file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH));
+    private static void readOrdersFromFile(Map<Integer, Order> map, FileOrder file) throws IOException {
         String[] string;
         if (file.length() > 0) {
-            while (reader.ready()) {
-                try {
+            try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+                while (reader.ready()) {
                     string = reader.readLine().split(";");
-                    map.put(Integer.valueOf(string[0]), new Order(OrderStatusEnum.valueOf(string[1]), LocalDateTime.parse(string[2]), LocalDateTime.parse(string[3])));
-                } catch (ArrayIndexOutOfBoundsException|NumberFormatException e) {
-                    System.out.println("Error : " + e.getMessage());
+                    map.put(Integer.valueOf(string[0]), new Order(Integer.parseInt(string[0]), OrderStatusEnum.valueOf(string[1]), LocalDateTime.parse(string[2]), LocalDateTime.parse(string[3])));
                 }
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+                System.out.println("Error : " + e.getMessage());
             }
-            reader.close();
         }
     }
 
@@ -107,7 +105,7 @@ public class Main {
     }
 
     private static void createNewOrder(Map<Integer, Order> map, int orderNumber) {
-        map.put(orderNumber, new Order(OrderStatusEnum.NEW, LocalDateTime.now(), LocalDateTime.now()));
+        map.put(orderNumber, new Order(orderNumber, OrderStatusEnum.NEW, LocalDateTime.now(), LocalDateTime.now()));
     }
 
     private static boolean checkNewStatus(OrderStatusEnum newStatus, OrderStatusEnum oldStatus) {

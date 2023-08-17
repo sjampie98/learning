@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 
 public class Order {
 
+    private int orderNumber;
     private OrderStatusEnum status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Order(OrderStatusEnum status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Order(int orderNumber, OrderStatusEnum status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.orderNumber = orderNumber;
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
