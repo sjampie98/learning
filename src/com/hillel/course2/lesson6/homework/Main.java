@@ -13,8 +13,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Map<Integer, Order> map = new HashMap<>();
-        FileOrder file = new FileOrder(FILE_PATH);
-        readOrdersFromFile(map, file);
+        map = deserialization(map);
         System.out.println(map);
         System.out.println("Hi. press enter to continue. if you want to stop write stop");
         while (!READER.readLine().equals("stop")) {
@@ -22,35 +21,7 @@ public class Main {
             createOrUpdateOrder(map, orderNumber);
             System.out.println("If you want to continue press enter. if you want to stop write stop");
         }
-        writeOrdersToFile(map);
-    }
-
-    private static void writeOrdersToFile(Map<Integer, Order> map) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH));
-        for (Map.Entry<Integer, Order> entry : map.entrySet()) {
-            Order order = entry.getValue();
-            String text = entry.getKey() + ";"
-                    + order.getStatus() + ";"
-                    + order.getCreatedAt() + ";"
-                    + order.getUpdatedAt() + "\n";
-            System.out.println(text);
-            writer.write(text);
-        }
-        writer.close();
-    }
-
-    private static void readOrdersFromFile(Map<Integer, Order> map, FileOrder file) throws IOException {
-        String[] string;
-        if (file.length() > 0) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-                while (reader.ready()) {
-                    string = reader.readLine().split(";");
-                    map.put(Integer.valueOf(string[0]), new Order(Integer.parseInt(string[0]), OrderStatusEnum.valueOf(string[1]), LocalDateTime.parse(string[2]), LocalDateTime.parse(string[3])));
-                }
-            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-                System.out.println("Error : " + e.getMessage());
-            }
-        }
+        serialization(map);
     }
 
     private static int inputOrderNumber() {
@@ -129,6 +100,25 @@ public class Main {
                 return false;
             default:
                 return false;
+        }
+    }
+
+    private static void serialization(Map<Integer, Order> map) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(FILE_PATH)) {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(map);
+        } catch (Exception e) {
+            System.out.println("ERROR : " + e.getMessage());
+        }
+    }
+
+    private static Map<Integer, Order> deserialization(Map<Integer, Order> map) {
+        try (FileInputStream fileInputStream = new FileInputStream(FILE_PATH)) {
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            return (Map<Integer, Order>) objectInputStream.readObject();
+        } catch (Exception e) {
+            System.out.println("ERROR : " + e.getMessage());
+            return map;
         }
     }
 }
