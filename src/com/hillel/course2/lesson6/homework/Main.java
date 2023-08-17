@@ -107,6 +107,8 @@ public class Main {
         try (FileOutputStream fileOutputStream = new FileOutputStream(FILE_PATH)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(map);
+            objectOutputStream.flush();
+            objectOutputStream.close();
         } catch (Exception e) {
             System.out.println("ERROR : " + e.getMessage());
         }
