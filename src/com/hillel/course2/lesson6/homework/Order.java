@@ -1,6 +1,6 @@
 package com.hillel.course2.lesson6.homework;
 
-import java.io.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Order implements Serializable {
@@ -16,6 +16,7 @@ public class Order implements Serializable {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
     public Order() {
     }
 
