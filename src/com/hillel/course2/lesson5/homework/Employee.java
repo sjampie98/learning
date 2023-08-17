@@ -11,7 +11,7 @@ public class Employee {
         this.name = name;
         this.surname = surname;
         this.salary = salary;
-        this.employeeType = EmployeeType.valueOf(String.valueOf(employeeType));
+        this.employeeType = employeeType;
     }
 
     @Override

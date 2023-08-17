@@ -14,12 +14,12 @@ public class Employees {
     public static void main(String[] args) throws IOException {
         Comparator<Employee> comparator = new EmployeeComparator();
         TreeSet<Employee> employees = new TreeSet<>(comparator.reversed());
-        loopForAddEmployee(employees);
+        fillEmployees(employees);
 
         System.out.println(employees);
     }
 
-    private static void loopForAddEmployee(TreeSet<Employee> employees) throws IOException {
+    private static void fillEmployees(TreeSet<Employee> employees) throws IOException {
         String input = "new";
         while (input.equalsIgnoreCase("new")) {
             inputData(employees);
