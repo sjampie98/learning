@@ -1,8 +1,9 @@
 package com.hillel.course2.lesson6.homework;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Order {
+public class Order implements Serializable {
 
     private int orderNumber;
     private OrderStatusEnum status;
@@ -14,6 +15,9 @@ public class Order {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public Order() {
     }
 
     public OrderStatusEnum getStatus() {
@@ -39,7 +43,8 @@ public class Order {
     @Override
     public String toString() {
         return "Order{" +
-                "status='" + status + '\'' +
+                "orderNumber=" + orderNumber +
+                ", status='" + status + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
