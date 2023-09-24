@@ -26,7 +26,6 @@ public class Main {
                 System.out.println("Name is incorrect!\n no less than 3 characters, no more than 256 characters,\n only Ukrainian / English letters");
                 name = READER.readLine();
             }
-            System.out.println(123123);
             return name;
         } catch (IOException e) {
             System.out.println("ERROR : " + e.getMessage());
